@@ -1,18 +1,18 @@
 package View;
 
 import Controller.AnimalController;
-import Model.*;
+import Model.Animal;
 import Services.Counter;
+import Services.Validator;
 
-import java.io.IOException;
 import java.sql.Date;
-import java.sql.SQLOutput;
-import java.time.DateTimeException;
+//import java.time.DateTimeException;
+import java.util.List;
 import java.util.Scanner;
 
 public class View {
 
-    private AnimalController animalController;
+    public AnimalController animalController;
 
 
     public View(AnimalController animalController) {
@@ -22,10 +22,10 @@ public class View {
 
     public void run() throws Exception {
         try (Scanner in = new Scanner(System.in, "ibm866");
-             Counter count = new Counter()) { // кастомный счетчик
+             Counter counter = new Counter()) { // кастомный счетчик
 
             boolean flag = true;
-            int id;
+//            int id;
             while (flag) {
                 System.out.println("Список команд:\n" +
                         "1 - Завести новое животное \n" +
@@ -39,8 +39,7 @@ public class View {
                 String command = in.next();
                 try {
                     switch (command) {
-                        case "1":
-                            String animalType = in.next();
+                        case "1"://Завести новое животное
                             System.out.println("Выберите вид животного:\n" +
                                     "1 - кот\n" +
                                     "2 - собака\n" +
@@ -48,60 +47,61 @@ public class View {
                                     "4 - лошадь\n" +
                                     "5 - верблюд\n" +
                                     "6 - осел\n");
+                            String animalType = in.next();
 
                             switch (animalType) {
                                 case "1":
-                                     animalController.addCat(inputName(), inputBirthday());
-                            }
+                                    animalController.addCat(counter.getSum(), inputName(), inputBirthday());
+                                    counter.add();
+                                case "2":
+                                    animalController.addDog(counter.getSum(), inputName(), inputBirthday());
+                                    counter.add();
+                                case "3":
+                                    animalController.addHamster(counter.getSum(), inputName(), inputBirthday());
+                                    counter.add();
+                                case "4":
+                                    animalController.addHorse(counter.getSum(), inputName(), inputBirthday());
+                                    counter.add();
 
-
-                            PetType type = menuChoice(in);
-                            if (type != null) {
-                                try {
-                                    animalController.createPet(type);
-                                    count.add();
-                                    System.out.println("ОК");
-                                } catch (UncorrectDataException e) {
-                                    System.out.println(e.getMessage());
-                                }
-                            }
-                            break;
-                        case "2":
-                            animalController.getAllPet();
-                            break;
-
-                        case "3":
-                            while (true) {
-                                id = menuChoicePet(in);
-                                if (id != 0)
-                                    try {
-                                        animalController.updatePet(id);
-                                    } catch (UncorrectDataException e) {
-                                        System.out.println(e.getMessage());
-                                    }
-                                else
-                                    break;
+                                case "5":
+                                    animalController.addCamel(counter.getSum(), inputName(), inputBirthday());
+                                    counter.add();
+                                case "6":
+                                    animalController.addDonkey(counter.getSum(), inputName(), inputBirthday());
+                                    counter.add();
                             }
                             break;
+                        case "2": // вывести список всех животных
+                            List<Animal> animals = animalController.getAll();
+                            for (int i = 0; i < animals.toArray().length; i++) {
+                                System.out.println(animals.get(i).toString());
+                            }
+                            break;
+
+                        case "3": //вывести данные животного по ID
+                            System.out.println("Введите id:");
+                            int id = Integer.parseInt(in.next());
+                            System.out.println(animalController.getAnimal(id).toString());
+
                         case "4":
-                            while (true) {
-                                id = menuChoicePet(in);
-                                if (id != 0)
-                                    animalController.getCommands(id);
-                                else
-                                    break;
-                            }
+//                            while (true) {
+//                                id = menuChoicePet(in);
+//                                if (id != 0)
+//                                    animalController.getCommands(id);
+//                                else
+//                                    break;
+//                            }
                             break;
                         case "5":
-                            id = menuChoicePet(in);
-                            if (id != 0)
-                                menuTrainPet(id, input);
-                            break;
+//                            id = menuChoicePet(in);
+//                            if (id != 0)
+//                                menuTrainPet(id, input);
+//                            break;
                         case "6":
-                            id = menuChoicePet(in);
-                            if (id != 0)
-                                animalController.delete(id);
-                            break;
+//                            id = menuChoicePet(in);
+//                            if (id != 0)
+//                                animalController.delete(id);
+//                            break;
                         case "7":
                             System.out.println("До свидания");
                             flag = false;
@@ -140,17 +140,26 @@ public class View {
 
     public String inputName() {
         try (Scanner in = new Scanner(System.in, "ibm866")) {
-            String name = in.next("Введите имя: ");
+            System.out.println("Введите имя: ");
+            String name = in.next();
             return name;
         }
     }
 
     public Date inputBirthday() {
-        Date birthday = null;
-        try (Scanner in = new Scanner(System.in, "ibm866")) {
-            birthday = Date.valueOf(in.next("Введите дату рождения в формате yyyy-mm-dd"));
+        Date birthday =Date.valueOf("2010-01-01") ;
+        try {
+            Scanner in = new Scanner(System.in);
+            System.out.println("Введите дату рождения в формате yyyy-mm-dd");
+            String date = in.next();
+            Validator validator = new Validator();
+            if (validator.isDateValid(date)){
+                birthday = Date.valueOf(date);
+                return birthday;
+            }
 
-        } catch (DateTimeException e) {
+
+        } catch (Exception e) {
             System.out.println("неверная дата" + e.getMessage());
         }
         return birthday;

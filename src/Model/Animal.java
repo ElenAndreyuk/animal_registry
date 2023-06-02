@@ -10,7 +10,8 @@ public abstract class Animal {
     public ArrayList <String> commands;
 
 
-    public Animal(String name, Date birthday) {
+    public Animal(int id, String name, Date birthday) {
+        this.id = Animal.id;
         this.name = name;
         this.birthday = birthday;
     }
@@ -41,7 +42,7 @@ public abstract class Animal {
     }
     @Override
     public String toString() {
-        return String.format("ID: %d имя: %s, дата рождения: %s ",  name, getBirthday());
+        return String.format("ID: "+ getId(), "name: " + getName(), "birthday:" + getBirthday());
     }
 
 }

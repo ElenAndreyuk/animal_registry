@@ -9,6 +9,9 @@ public class Counter implements AutoCloseable{
     public void add() {
         sum++;
     }
+    public int getSum(){
+        return sum;
+    }
 
     @Override
     public void close() {

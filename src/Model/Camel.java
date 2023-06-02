@@ -5,7 +5,7 @@ import Model.Animal;
 import java.sql.Date;
 
 public class Camel extends Animal implements Packable {
-    public Camel(String name, Date birthday) {
-        super(name, birthday);
+    public Camel(int id, String name, Date birthday) {
+        super(id, name, birthday);
     }
 }
