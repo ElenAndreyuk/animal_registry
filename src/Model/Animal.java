@@ -1,17 +1,16 @@
 package Model;
 
-import java.sql.Date;
 import java.util.ArrayList;
 
 public abstract class Animal {
     protected static int id;
     public String name;
-    public Date birthday;
+    public String  birthday;
     public ArrayList <String> commands;
 
 
-    public Animal(int id, String name, Date birthday) {
-        this.id = Animal.id;
+    public Animal(int id, String name, String  birthday) {
+        this.id = id;
         this.name = name;
         this.birthday = birthday;
     }
@@ -24,15 +23,11 @@ public abstract class Animal {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public String getBirthday() {
-        return birthday.toString();
+        return birthday;
     }
 
-    public String getCommands() {
+    public String getAnimalCommands() {
         return commands.toString();
     }
 
